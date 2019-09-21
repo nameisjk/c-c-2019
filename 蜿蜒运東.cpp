@@ -3,18 +3,18 @@
 using namespace std;
 
 /* 
-a�C�ؽ�i��ؽ�i-1֮���ת�� ���ȣ� 
-b�CeΪ0ʱ���ؽ�ת���ķ�ֵ���ȣ� 
-c�C�ؽ�ת��Ƶ�ʣ�PI/S�� 
-d�C��λ��ȣ� 
-e�C�����ؽ�ϵͳ��ƫת�ǣ��ȣ� 
-f�C����ٶ� 
-i�C�ؽ��� 
+a–关节i与关节i-1之间的转角 （度） 
+b–e为0时，关节转交的幅值（度） 
+c–关节转角频率（PI/S） 
+d–相位差（度） 
+e–整个关节系统的偏转角（度） 
+f–拟合速度 
+i–关节数 
 */  
 class Snake  
 {    
     //a=b*sin(c*t+i*d)+e  
-    //a=b*(1-E^(-f*t))*sin(c*t+i*d)+e����������������ĺ���
+    //a=b*(1-E^(-f*t))*sin(c*t+i*d)+e加入无限趋近于零的函数
 	public:
     	float b;  
    		float c;  
@@ -26,18 +26,22 @@ class Snake
 	{  
    	 	for (int i = 0; i < 12; i++)  
    	 	{  
-        	cout << "ang" << i << "= " << *(buf + i) << "\t";  
-    	}  
-    cout << "  "<< endl;  
-	}  	
+        		cout << "ang" << i << "= " << *(buf + i) << "\t";  
+    		}  
+   		cout << "  "<< endl;  
+	}  
+	
+	
+	 
+	float get_ang(Snake snake, int i, float t)  
+	{  
+    	return snake.b * sin(snake.c*t + i*snake.d) + snake.e;//三角函数  
+	} 
+
+		
 	 
 }; 
  
- 
-float get_ang(Snake snake, int i, float t)  
-{  
-    return snake.b * sin(snake.c*t + i*snake.d) + snake.e;//���Ǻ���  
-} 
 
 
 
@@ -55,7 +59,7 @@ int main()
     {  
         for (int i = 0; i < 12; i++)  
         {  
-            ang[i] = get_ang(snake, i + 1, t);  
+            ang[i] = snake.get_ang(snake, i + 1, t);  
         }  
         t += snake.t;  
         snake.print_ang(ang);  
